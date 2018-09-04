@@ -2,7 +2,6 @@ package sthlm.malmo.christofferwiregren.gogogreen;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
@@ -14,18 +13,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.List;
+
+/**
+ * VeggieAdapter refreshes the recycler view
+ */
 
 public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHolder> {
     private List<Vegetable> mVegetableList;
     private EditText mEName, mEPrice;
 
 
-    private DatabaseReference firebaseData = FirebaseDatabase.getInstance().getReference();
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mName, mQuantity, mPrice, mTot;
         private Button mBtnPlus, mBtnMinus, mBtnDelete;
@@ -44,8 +42,9 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         }
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.veggie_item, parent, false);
         return new MyViewHolder(itemView);
@@ -59,59 +58,53 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         final ServiceHelper serviceHelper = new ServiceHelper();
 
 
-        holder.mRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mRecyclerView.setOnClickListener(v -> {
 
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(v.getContext());
-                alertDialog.setMessage("Produktdetaljer");
-                alertDialog.setCancelable(true);
-                final Context context = alertDialog.getContext();
-                final LayoutInflater inflater = LayoutInflater.from(context);
-                final View view = inflater.inflate(R.layout.detail_task, null, false);
-                alertDialog.setView(view);
-                mEName = view.findViewById(R.id.editnameDetail);
-                mEPrice = view.findViewById(R.id.editPriceDetail);
-                mEName.setText(mVegetableList.get(position).getName());
-                mEPrice.setText(Integer.toString(mVegetableList.get(position).getPrice()));
-                alertDialog.setPositiveButton(
-                        R.string.save_edit_dial,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                if (mEName.getText().toString().equals("") || mEPrice.getText().toString().equals("")) {
-                                    Toast.makeText(view.getContext(), R.string.error_add_dial, Toast.LENGTH_SHORT).show();
-                                } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(v.getContext());
+            alertDialog.setMessage("Produktdetaljer");
+            alertDialog.setCancelable(true);
+            final Context context = alertDialog.getContext();
+            final LayoutInflater inflater = LayoutInflater.from(context);
+            @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.detail_task, null, false);
+            alertDialog.setView(view);
+            mEName = view.findViewById(R.id.editnameDetail);
+            mEPrice = view.findViewById(R.id.editPriceDetail);
+            mEName.setText(mVegetableList.get(position).getName());
+            mEPrice.setText(Integer.toString(mVegetableList.get(position).getPrice()));
+            alertDialog.setPositiveButton(
+                    R.string.save_edit_dial,
+                    (dialog, id) -> {
+                        if (mEName.getText().toString().equals("") || mEPrice.getText().toString().equals("")) {
+                            Toast.makeText(view.getContext(), R.string.error_add_dial, Toast.LENGTH_SHORT).show();
+                        } else {
 
-                                    mVegetableList.get(position).setName(mEName.getText().toString());
-                                    mVegetableList.get(position).setPrice(Integer.valueOf(mEPrice.getText().toString()));
-                                    serviceHelper.UpdateItems(mVegetableList.get(position));
-                                    Toast.makeText(view.getContext(), R.string.success_add_dial, Toast.LENGTH_SHORT).show();
-                                    dialog.dismiss();
-                                }
+                            if(Helper.searchInListIfNameExists(mEName.getText().toString(),mVegetableList)){
+                                Toast.makeText(view.getContext(), R.string.item_exists, Toast.LENGTH_SHORT).show();
+                                return;
                             }
-                        });
 
-                alertDialog.setNegativeButton(
-                        R.string.done_edit_dial,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                serviceHelper.deleteItem(mVegetableList.get(position));
-                                Toast.makeText(view.getContext(), R.string.deleted_edit_task, Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        });
+                            mVegetableList.get(position).setName(mEName.getText().toString());
+                            mVegetableList.get(position).setPrice(Integer.valueOf(mEPrice.getText().toString()));
+                            serviceHelper.UpdateItems(mVegetableList.get(position));
+                            Toast.makeText(view.getContext(), R.string.success_add_dial, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
 
-                alertDialog.setNeutralButton(
-                        R.string.cancel_add_dial,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+            alertDialog.setNegativeButton(
+                    R.string.done_edit_dial,
+                    (dialog, id) -> {
+                        serviceHelper.deleteItem(mVegetableList.get(position));
+                        Toast.makeText(view.getContext(), R.string.deleted_edit_task, Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    });
 
-                AlertDialog alert11 = alertDialog.create();
-                alert11.show();
-            }
+            alertDialog.setNeutralButton(
+                    R.string.cancel_add_dial,
+                    (dialog, id) -> dialog.cancel());
+
+            AlertDialog alert11 = alertDialog.create();
+            alert11.show();
         });
         final Vegetable vegetable = mVegetableList.get(position);
 
@@ -119,57 +112,37 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         holder.mPrice.setText(Integer.toString(vegetable.getPrice())+" kr");
         holder.mQuantity.setText(Integer.toString(vegetable.getQuantity())+" st");
         holder.mTot.setText(Integer.toString(vegetable.getTotal())+ " kr");
-        holder.mBtnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mBtnDelete.setOnClickListener(v -> {
 
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(v.getContext());
-                builder.setMessage(R.string.delete_message)
-                        .setTitle(R.string.delete_task).setIcon(R.drawable.eraser)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(v.getContext());
+            builder.setMessage(R.string.delete_message)
+                    .setTitle(R.string.delete_task).setIcon(R.drawable.eraser)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> serviceHelper.deleteItem(vegetable))
 
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                serviceHelper.deleteItem(vegetable);
-                            }
-                        })
-
-                        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                                dialog.cancel();
-                            }
-                        });
-                android.app.AlertDialog alert = builder.create();
-                alert.show();
-            }
+                    .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
         });
-        holder.mBtnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mBtnPlus.setOnClickListener(v -> {
 
-                int tempsum = vegetable.getQuantity();
-                tempsum ++;
+            int tempsum = vegetable.getQuantity();
+            tempsum ++;
+            vegetable.setQuantity(tempsum);
+            holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()));
+            serviceHelper.UpdateItems(vegetable);
+
+        });
+
+        holder.mBtnMinus.setOnClickListener(v -> {
+
+            int tempsum = vegetable.getQuantity();
+            if(tempsum>0) {
+                tempsum--;
                 vegetable.setQuantity(tempsum);
                 holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()));
                 serviceHelper.UpdateItems(vegetable);
 
-            }
-        });
-
-        holder.mBtnMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int tempsum = vegetable.getQuantity();
-                if(tempsum>0) {
-                    tempsum--;
-                    vegetable.setQuantity(tempsum);
-                    holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()));
-                    serviceHelper.UpdateItems(vegetable);
-
-                }
             }
         });
     }

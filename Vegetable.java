@@ -1,7 +1,5 @@
 package sthlm.malmo.christofferwiregren.gogogreen;
 
-import android.support.annotation.NonNull;
-
 public class Vegetable {
     private String name;
     private String ID;
@@ -42,16 +40,14 @@ public class Vegetable {
 
     public int getTotal(){ return quantity * price; }
 
-    public Vegetable() {
+    Vegetable() {
     }
 
     public Vegetable(String name, String ID, int price, int quantity) {
-
         this.name = name;
         this.ID = ID;
         this.price = price;
         this.quantity = quantity;
-
     }
 
     @Override

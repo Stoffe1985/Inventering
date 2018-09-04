@@ -1,26 +1,33 @@
 package sthlm.malmo.christofferwiregren.gogogreen;
 
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * Helper class that provides with search and sort methods
+ *
+ */
 public class Helper {
 
 
-    public static String createTransactionID() throws Exception {
+    /**
+     * Create a unique ID
+     * @return
+     * @throws Exception
+     */
+    public static String createTransactionID() {
         return "x1x"+String.valueOf(UUID.randomUUID());
     }
 
+    /**
+     * Sort a list by name
+     * @param vegetables
+     */
     public static void sortedByName(List<Vegetable> vegetables) {
-
 
         Collections.sort(vegetables, new Comparator() {
             @Override
@@ -33,27 +40,54 @@ public class Helper {
 
     }
 
+    /**
+     * Sort a list by ID
+     * @param vegetableList
+     */
 
     public static List<Vegetable> searchInListByName(final String name, List<Vegetable> vegetableList) {
-
-
-        Log.e("namn", "" + name);
 
         return vegetableList.stream()
                 .filter(item -> item.getName().contains(name))
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     *
+     * @param name
+     */
+
+    public static Boolean searchInListIfNameExists(
+            String name, List<Vegetable> vegetables) {
+
+        for (Vegetable customer : vegetables) {
+            if (customer.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     *
+     * Search in a list by using a ID.
+     * @param name
+     * @param vegetableList
+     * @return
+     */
+
     public static List<Vegetable> searchInListByID(final String name, List<Vegetable> vegetableList) {
-
-
-        Log.e("namn", "" + name);
 
         return vegetableList.stream()
                 .filter(item -> item.getID().contains(name))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Sorted list by Amount.
+     * @param vegetables
+     */
 
     public static void sortedByAmount(List<Vegetable> vegetables) {
 
@@ -78,6 +112,13 @@ public class Helper {
                 });
     }
 
+
+    /**
+     *
+     * Sorted list by price
+     * @param vegetables
+     */
+
     public static void sortedByPrice(List<Vegetable> vegetables) {
 
         Collections.sort(vegetables,
@@ -101,29 +142,35 @@ public class Helper {
                 });
     }
 
+    /**
+     *
+     * Sorted list by price
+     * @param vegetables
+     */
+
     public static void sortedByTotal(List<Vegetable> vegetables) {
 
         Collections.sort(vegetables,
-                new Comparator<Vegetable>()
-                {
-                    public int compare(Vegetable o1,
-                                       Vegetable o2)
+                (o1, o2) -> {
+                    if (o1.getPrice() ==
+                            o2.getPrice())
                     {
-                        if (o1.getPrice() ==
-                                o2.getPrice())
-                        {
-                            return 0;
-                        }
-                        else if (o1.getTotal() >
-                                o2.getTotal())
-                        {
-                            return -1;
-                        }
-                        return 1;
+                        return 0;
                     }
+                    else if (o1.getTotal() >
+                            o2.getTotal())
+                    {
+                        return -1;
+                    }
+                    return 1;
                 });
     }
 
+    /**
+     *
+     * Check if a string contains numeric characters
+     * @param str
+     */
     public static boolean isNumeric(String str)
     {
         try
