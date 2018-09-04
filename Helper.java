@@ -69,6 +69,16 @@ public class Helper {
         return false;
     }
 
+    public static int searchIndexOfNameInList(String name, List<Vegetable> vegetables) {
+
+        for (Vegetable customer : vegetables) {
+            if (customer.getName().equals(name)) {
+                return vegetables.indexOf(customer);
+            }
+        }
+        return -1;
+    }
+
     /**
      *
      * Search in a list by using a ID.

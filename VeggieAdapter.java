@@ -77,12 +77,6 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
                         if (mEName.getText().toString().equals("") || mEPrice.getText().toString().equals("")) {
                             Toast.makeText(view.getContext(), R.string.error_add_dial, Toast.LENGTH_SHORT).show();
                         } else {
-
-                            if(Helper.searchInListIfNameExists(mEName.getText().toString(),mVegetableList)){
-                                Toast.makeText(view.getContext(), R.string.item_exists, Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
                             mVegetableList.get(position).setName(mEName.getText().toString());
                             mVegetableList.get(position).setPrice(Integer.valueOf(mEPrice.getText().toString()));
                             serviceHelper.UpdateItems(mVegetableList.get(position));

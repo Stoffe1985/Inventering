@@ -145,6 +145,9 @@ public class StartFragment extends Fragment {
                             } else {
 
                                 if(Helper.searchInListIfNameExists(mName.getText().toString(),mVeggieArrayList)){
+
+
+
                                     Toast.makeText(getContext(), R.string.item_exists, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
