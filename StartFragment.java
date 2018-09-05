@@ -43,6 +43,8 @@ public class StartFragment extends Fragment {
     private EditText msearchField;
     private List<Vegetable> mTempListVeg, mTempListVegSecond;
     private int sortValue;
+    private Spinner mSortSpinner;
+    private RecyclerView mRecyclerView;
 
     public StartFragment() {
         // Required empty public constructor
@@ -61,6 +63,9 @@ public class StartFragment extends Fragment {
         init(view);
         setupListViewListener();
         setupEditTextSearch();
+        setUpSpinner();
+        setUpRcyclerView();
+        setUpBtnAddAction();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -68,38 +73,21 @@ public class StartFragment extends Fragment {
         mTempListVeg = new ArrayList<>();
         mTempListVegSecond = new ArrayList<>();
         msearchField = view.findViewById(R.id.txt_search);
-        Spinner mSortSpinner = view.findViewById(R.id.spinner1);
+        mSortSpinner = view.findViewById(R.id.spinner1);
         mServiceHelper = new ServiceHelper(getContext());
-        RecyclerView mRecyclerView = view.findViewById(R.id.veggie_list);
+        mRecyclerView = view.findViewById(R.id.veggie_list);
         mName = view.findViewById(R.id.addTitle);
         mPrice = view.findViewById(R.id.addContent);
         mButtonAdd = view.findViewById(R.id.btn_add);
-        mVeggieArrayList = new ArrayList<>();
-        mVeggieArrayList.clear();
-        mAdapter = new VeggieAdapter(mVeggieArrayList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),R.array.numers, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSortSpinner.setAdapter(adapter);
-        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortValue = position;
-                sortData(sortValue);
-            }
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+    @SuppressLint("ClickableViewAccessibility")
+    private void setUpBtnAddAction() {
 
 
         mButtonAdd.setOnTouchListener((v, event) -> {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
                 mButtonAdd.setAlpha(0.5f);
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -122,15 +110,11 @@ public class StartFragment extends Fragment {
                             } else {
 
                                 if(Helper.searchInListIfNameExists(mName.getText().toString(),mVeggieArrayList)){
-
-
-
                                     Toast.makeText(getContext(), R.string.item_exists, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
                                 if (Helper.isNumeric(String.valueOf(mPrice.getText()))) {
-
                                     Vegetable vegetable = new Vegetable();
                                     vegetable.setName(String.valueOf(mName.getText()));
                                     vegetable.setPrice(Integer.parseInt(String.valueOf(mPrice.getText())));
@@ -160,6 +144,33 @@ public class StartFragment extends Fragment {
             return false;
         });
     }
+
+    private void setUpRcyclerView(){
+        mVeggieArrayList = new ArrayList<>();
+        mVeggieArrayList.clear();
+        mAdapter = new VeggieAdapter(mVeggieArrayList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(Objects.requireNonNull(getActivity()).getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void setUpSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),R.array.numers, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSortSpinner.setAdapter(adapter);
+        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortValue = position;
+                sortData(sortValue);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
 
     private void setupEditTextSearch(){
 
@@ -209,7 +220,6 @@ public class StartFragment extends Fragment {
                 }
 
                 sortData(sortValue);
-
             }
 
             @Override
