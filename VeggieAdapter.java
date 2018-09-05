@@ -13,11 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.List;
 
-/**
- * VeggieAdapter refreshes the recycler view
- */
 
 public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHolder> {
     private List<Vegetable> mVegetableList;
@@ -31,7 +29,7 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
 
         MyViewHolder(View view) {
             super(view);
-            mBtnPlus =  view.findViewById(R.id.btn_plus);
+            mBtnPlus = view.findViewById(R.id.btn_plus);
             mBtnMinus = view.findViewById(R.id.btn_minus);
             mName = view.findViewById(R.id.txt_food);
             mQuantity = view.findViewById(R.id.txt_amount);
@@ -103,9 +101,9 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         final Vegetable vegetable = mVegetableList.get(position);
 
         holder.mName.setText(vegetable.getName());
-        holder.mPrice.setText(Integer.toString(vegetable.getPrice())+" kr");
-        holder.mQuantity.setText(Integer.toString(vegetable.getQuantity())+" st");
-        holder.mTot.setText(Integer.toString(vegetable.getTotal())+ " kr");
+        holder.mPrice.setText(Integer.toString(vegetable.getPrice()) + " kr");
+        holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()) + " st");
+        holder.mTot.setText(Integer.toString(vegetable.getTotal()) + " kr");
         holder.mBtnDelete.setOnClickListener(v -> {
 
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(v.getContext());
@@ -121,7 +119,7 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         holder.mBtnPlus.setOnClickListener(v -> {
 
             int tempsum = vegetable.getQuantity();
-            tempsum ++;
+            tempsum++;
             vegetable.setQuantity(tempsum);
             holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()));
             serviceHelper.UpdateItems(vegetable);
@@ -131,7 +129,7 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         holder.mBtnMinus.setOnClickListener(v -> {
 
             int tempsum = vegetable.getQuantity();
-            if(tempsum>0) {
+            if (tempsum > 0) {
                 tempsum--;
                 vegetable.setQuantity(tempsum);
                 holder.mQuantity.setText(Integer.toString(vegetable.getQuantity()));

@@ -1,4 +1,5 @@
 package sthlm.malmo.christofferwiregren.gogogreen;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,11 +22,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +45,7 @@ public class StartFragment extends Fragment {
     private ServiceHelper mServiceHelper;
     private EditText msearchField;
     private List<Vegetable> mTempListVeg, mTempListVegSecond;
-    private int sortValue;
+    private int mSortValue;
     private Spinner mSortSpinner;
     private RecyclerView mRecyclerView;
 
@@ -62,9 +65,9 @@ public class StartFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view);
         setupListViewListener();
-        setupEditTextSearch();
+        setUpEditTextSearch();
         setUpSpinner();
-        setUpRcyclerView();
+        setUpRecyclerView();
         setUpBtnAddAction();
     }
 
@@ -109,7 +112,7 @@ public class StartFragment extends Fragment {
                                 Toast.makeText(getContext(), R.string.error_add_dial, Toast.LENGTH_SHORT).show();
                             } else {
 
-                                if(Helper.searchInListIfNameExists(mName.getText().toString(),mVeggieArrayList)){
+                                if (Helper.searchInListIfNameExists(mName.getText().toString(), mVeggieArrayList)) {
                                     Toast.makeText(getContext(), R.string.item_exists, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
@@ -145,7 +148,7 @@ public class StartFragment extends Fragment {
         });
     }
 
-    private void setUpRcyclerView(){
+    private void setUpRecyclerView() {
         mVeggieArrayList = new ArrayList<>();
         mVeggieArrayList.clear();
         mAdapter = new VeggieAdapter(mVeggieArrayList);
@@ -156,47 +159,50 @@ public class StartFragment extends Fragment {
     }
 
     private void setUpSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),R.array.numers, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()), R.array.numers, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSortSpinner.setAdapter(adapter);
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortValue = position;
-                Helper.sortData(sortValue, mVeggieArrayList);
+                mSortValue = position;
+                Helper.sortData(mSortValue, mVeggieArrayList);
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
 
-    private void setupEditTextSearch(){
+    private void setUpEditTextSearch() {
 
         msearchField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                replaceOldListWithNewList(mTempListVeg,s.toString());
-                }
+                replaceOldListWithNewList(mTempListVeg, s.toString());
+            }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
-    private void replaceOldListWithNewList(List<Vegetable> vegetables, String word ) {
+    private void replaceOldListWithNewList(List<Vegetable> vegetables, String word) {
 
         mTempListVegSecond.addAll(vegetables);
         mVeggieArrayList.clear();
-        if(word.contains("x1x")){
+        if (word.contains("x1x")) {
             mVeggieArrayList.addAll(Helper.searchInListByID(word, mTempListVegSecond));
 
-        }else{
+        } else {
             mVeggieArrayList.addAll(Helper.searchInListByName(word, mTempListVegSecond));
         }
         mAdapter.notifyDataSetChanged();
@@ -220,14 +226,13 @@ public class StartFragment extends Fragment {
                     mTempListVeg.add(vegetable);
                 }
 
-                Helper.sortData(sortValue,mVeggieArrayList);
+                Helper.sortData(mSortValue, mVeggieArrayList);
                 mAdapter.notifyDataSetChanged();
-
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
-
 }
