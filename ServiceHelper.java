@@ -69,5 +69,4 @@ public class ServiceHelper {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
         mDatabaseRef.child("Food").child(vegetable.getID()).setValue(null);
         }
-
 }
