@@ -52,6 +52,29 @@ public class Helper {
                 .collect(Collectors.toList());
     }
 
+    public static void sortData(int position, List<Vegetable> mVeggieArrayList) {
+
+        switch(position) {
+
+            case 1 :
+              sortedByName(mVeggieArrayList);
+                break;
+
+            case 2 :
+              sortedByTotal(mVeggieArrayList);
+                break;
+
+            case 3 :
+               sortedByAmount(mVeggieArrayList);
+                break;
+
+            case 4 :
+               sortedByPrice(mVeggieArrayList);
+                break;
+
+            default : Helper.sortedByName(mVeggieArrayList);
+        }
+    }
 
     /**
      *

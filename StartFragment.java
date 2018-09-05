@@ -163,7 +163,8 @@ public class StartFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sortValue = position;
-                sortData(sortValue);
+                Helper.sortData(sortValue, mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -219,7 +220,9 @@ public class StartFragment extends Fragment {
                     mTempListVeg.add(vegetable);
                 }
 
-                sortData(sortValue);
+                Helper.sortData(sortValue,mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -227,32 +230,4 @@ public class StartFragment extends Fragment {
         });
     }
 
-    private void sortData(int position){
-
-        switch(position) {
-
-            case 1 :
-                Helper.sortedByName(mVeggieArrayList);
-                mAdapter.notifyDataSetChanged();
-                break;
-
-            case 2 :
-                Helper.sortedByTotal(mVeggieArrayList);
-                mAdapter.notifyDataSetChanged();
-                break;
-
-            case 3 :
-                Helper.sortedByAmount(mVeggieArrayList);
-                mAdapter.notifyDataSetChanged();
-                break;
-
-            case 4 :
-                Helper.sortedByPrice(mVeggieArrayList);
-                mAdapter.notifyDataSetChanged();
-                break;
-
-            default : Helper.sortedByName(mVeggieArrayList);
-                mAdapter.notifyDataSetChanged();
-        }
-    }
 }
