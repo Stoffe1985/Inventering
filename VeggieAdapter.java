@@ -72,9 +72,16 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
             alertDialog.setPositiveButton(
                     R.string.save_edit_dial,
                     (dialog, id) -> {
+
+                        if(!CheckNetwork.isNetworkConnected(v.getContext())){
+                            Toast.makeText(v.getContext(), R.string.network, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         if (mEName.getText().toString().equals("") || mEPrice.getText().toString().equals("")) {
                             Toast.makeText(view.getContext(), R.string.error_add_dial, Toast.LENGTH_SHORT).show();
                         } else {
+
                             mVegetableList.get(position).setName(mEName.getText().toString());
                             mVegetableList.get(position).setPrice(Integer.valueOf(mEPrice.getText().toString()));
                             serviceHelper.UpdateItems(mVegetableList.get(position));
@@ -86,6 +93,11 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
             alertDialog.setNegativeButton(
                     R.string.done_edit_dial,
                     (dialog, id) -> {
+
+                        if(!CheckNetwork.isNetworkConnected(v.getContext())){
+                            Toast.makeText(v.getContext(), R.string.network, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         serviceHelper.deleteItem(mVegetableList.get(position));
                         Toast.makeText(view.getContext(), R.string.deleted_edit_task, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -106,6 +118,11 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         holder.mTot.setText(Integer.toString(vegetable.getTotal()) + " kr");
         holder.mBtnDelete.setOnClickListener(v -> {
 
+            if(!CheckNetwork.isNetworkConnected(v.getContext())){
+                Toast.makeText(v.getContext(), R.string.network, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(v.getContext());
             builder.setMessage(R.string.delete_message)
                     .setTitle(R.string.delete_task).setIcon(R.drawable.eraser)
@@ -118,6 +135,10 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         });
         holder.mBtnPlus.setOnClickListener(v -> {
 
+            if(!CheckNetwork.isNetworkConnected(v.getContext())){
+                Toast.makeText(v.getContext(), R.string.network, Toast.LENGTH_SHORT).show();
+                return;
+            }
             int tempsum = vegetable.getQuantity();
             tempsum++;
             vegetable.setQuantity(tempsum);
@@ -127,7 +148,10 @@ public class VeggieAdapter extends RecyclerView.Adapter<VeggieAdapter.MyViewHold
         });
 
         holder.mBtnMinus.setOnClickListener(v -> {
-
+            if(!CheckNetwork.isNetworkConnected(v.getContext())){
+                Toast.makeText(v.getContext(), R.string.network, Toast.LENGTH_SHORT).show();
+                return;
+            }
             int tempsum = vegetable.getQuantity();
             if (tempsum > 0) {
                 tempsum--;

@@ -90,12 +90,13 @@ public class StartFragment extends Fragment {
 
         mButtonAdd.setOnTouchListener((v, event) -> {
 
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 mButtonAdd.setAlpha(0.5f);
 
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-
                 mButtonAdd.setAlpha(1);
+
                 AlertDialog.Builder adBuilder = new AlertDialog.Builder(getActivity());
                 adBuilder.setMessage(R.string.title_add_dial);
                 final Context context = adBuilder.getContext();
@@ -105,6 +106,11 @@ public class StartFragment extends Fragment {
                 adBuilder.setPositiveButton(
                         R.string.save_add_dial,
                         (dialog, id) -> {
+
+                            if(!CheckNetwork.isNetworkConnected(getContext())){
+                                Toast.makeText(getActivity(), R.string.network, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             mName = view1.findViewById(R.id.addTitle);
                             mPrice = view1.findViewById(R.id.addContent);
 
