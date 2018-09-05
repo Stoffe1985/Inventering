@@ -19,7 +19,6 @@ public class ServiceHelper {
     private DatabaseReference mDatabaseRef;
     private Context mContext;
 
-
     ServiceHelper() {}
 
     ServiceHelper(Context context) {
