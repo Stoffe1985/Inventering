@@ -42,6 +42,7 @@ public class StartFragment extends Fragment {
     private ServiceHelper mServiceHelper;
     private EditText msearchField;
     private List<Vegetable> mTempListVeg, mTempListVegSecond;
+    private int sortValue;
 
     public StartFragment() {
         // Required empty public constructor
@@ -86,32 +87,8 @@ public class StartFragment extends Fragment {
         mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                switch(position) {
-
-                    case 1 :
-                        Helper.sortedByName(mVeggieArrayList);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-
-                    case 2 :
-                        Helper.sortedByTotal(mVeggieArrayList);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-
-                    case 3 :
-                         Helper.sortedByAmount(mVeggieArrayList);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-
-                    case 4 :
-                        Helper.sortedByPrice(mVeggieArrayList);
-                        mAdapter.notifyDataSetChanged();
-                        break;
-
-                        default : Helper.sortedByName(mVeggieArrayList);
-                        mAdapter.notifyDataSetChanged();
-                }
+                sortValue = position;
+                sortData(sortValue);
             }
 
             @Override
@@ -230,7 +207,9 @@ public class StartFragment extends Fragment {
                     mVeggieArrayList.add(vegetable);
                     mTempListVeg.add(vegetable);
                 }
-                    mAdapter.notifyDataSetChanged();
+
+                sortData(sortValue);
+
             }
 
             @Override
@@ -238,4 +217,32 @@ public class StartFragment extends Fragment {
         });
     }
 
+    private void sortData(int position){
+
+        switch(position) {
+
+            case 1 :
+                Helper.sortedByName(mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+                break;
+
+            case 2 :
+                Helper.sortedByTotal(mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+                break;
+
+            case 3 :
+                Helper.sortedByAmount(mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+                break;
+
+            case 4 :
+                Helper.sortedByPrice(mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+                break;
+
+            default : Helper.sortedByName(mVeggieArrayList);
+                mAdapter.notifyDataSetChanged();
+        }
+    }
 }
