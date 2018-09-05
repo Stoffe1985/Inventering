@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -46,8 +47,11 @@ public class StartFragment extends Fragment {
     private EditText msearchField;
     private List<Vegetable> mTempListVeg, mTempListVegSecond;
     private int mSortValue;
+    private TextView txtTotalAmount, txtTotalPrice;
     private Spinner mSortSpinner;
     private RecyclerView mRecyclerView;
+    private int mtotalSum, mtotalamount;
+
 
     public StartFragment() {
         // Required empty public constructor
@@ -82,6 +86,10 @@ public class StartFragment extends Fragment {
         mName = view.findViewById(R.id.addTitle);
         mPrice = view.findViewById(R.id.addContent);
         mButtonAdd = view.findViewById(R.id.btn_add);
+        txtTotalAmount = view.findViewById(R.id.total_amout);
+        txtTotalPrice = view.findViewById(R.id.total_sum);
+        mtotalamount = 0;
+        mtotalSum = 0;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -228,12 +236,23 @@ public class StartFragment extends Fragment {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     vegetable = ds.getValue(Vegetable.class);
+                    assert vegetable != null;
+                    mtotalSum += vegetable.getTotal();
+                    mtotalamount += vegetable.getQuantity();
                     mVeggieArrayList.add(vegetable);
                     mTempListVeg.add(vegetable);
+
+
                 }
+
+                txtTotalAmount.setText(String.valueOf(mtotalamount)+ " st");
+                txtTotalPrice.setText(String.valueOf(mtotalSum)+ " kr");
+
 
                 Helper.sortData(mSortValue, mVeggieArrayList);
                 mAdapter.notifyDataSetChanged();
+                mtotalSum = 0;
+                mtotalamount = 0;
             }
 
             @Override
