@@ -51,6 +51,7 @@ public class ServiceHelper {
      */
     public void UpdateItems(Vegetable vegetables) {
 
+
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Food").child(vegetables.getID());
 
         Map<String, Object> postValues = new HashMap<String,Object>();
@@ -62,7 +63,7 @@ public class ServiceHelper {
     }
 
     /**
-     * Delete item om Firebase
+     * Delete item on Firebase
      * @param vegetable
      */
     public void deleteItem(Vegetable vegetable){
